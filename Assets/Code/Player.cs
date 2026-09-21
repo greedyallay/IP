@@ -15,6 +15,8 @@ public class Player : MonoBehaviour {
     SpriteRenderer renderer;
     [HideInInspector] public static AudioSource audio;
     float deathTime;
+    float airTime;
+    bool hasJumped;
 
 
     public static Transform player;
@@ -27,6 +29,8 @@ public class Player : MonoBehaviour {
     public AudioClip deathSound;
 
     public Transform deathEffect;
+
+    public float coyoteWindow;
     //public Transform pointOfDeath;
 
 
@@ -80,18 +84,20 @@ public class Player : MonoBehaviour {
         bool floor = onFloor();
         if (Input.GetKey("a") && wall != -1) { body.linearVelocityX -= (floor ? floorAcceleration : airAcceleration) * Time.deltaTime; }
         if (Input.GetKey("d") && wall != 1) { body.linearVelocityX += (floor ? floorAcceleration : airAcceleration) * Time.deltaTime; }
-
-        if (floor) {
-
-            if (Input.GetKeyDown("w")) {
-                body.linearVelocityY = jumpHeight;
-                audio.PlayOneShot(jumpSound);
+        if (Input.GetKeyDown("w")) {
+            if (floor || airTime < coyoteWindow) {
+                Jump();
             }
+
+        }
+        if (floor) {
+            airTime = 0;
+            hasJumped = false;
             body.linearVelocityX *= Mathf.Pow(floorDamping, Time.deltaTime);
         }
         else {
             body.linearVelocityX *= Mathf.Pow(airDamping, Time.deltaTime);
-
+            airTime += Time.deltaTime;
         }
 
         body.linearVelocityX = Mathf.Clamp(body.linearVelocityX, -maxSpeed, maxSpeed);
@@ -106,10 +112,18 @@ public class Player : MonoBehaviour {
         return Physics2D.Raycast(origin, dir, box.size.x, 1 << LayerMask.NameToLayer("Stage"));
     }
 
+    void Jump() {
+        if (hasJumped) return;
+        hasJumped = true;
+        body.linearVelocityY = jumpHeight;
+        audio.PlayOneShot(jumpSound);
+    }
+
     int againstWall() {
         int shit = 0;
-        Vector2 leftPos = new Vector2(box.bounds.min.x, box.bounds.max.y);
-        Vector2 rightPos = new Vector2(box.bounds.max.x, box.bounds.max.y);
+        float detectionRange = .02f;
+        Vector2 leftPos = new Vector2(box.bounds.min.x - detectionRange, box.bounds.max.y);
+        Vector2 rightPos = new Vector2(box.bounds.max.x + detectionRange, box.bounds.max.y);
         Vector2 dir = Vector2.down;
         Debug.DrawRay(rightPos, dir, new Color(255, 0f, 0f));
         Debug.DrawRay(leftPos, dir, new Color(255, 0f, 0f));
