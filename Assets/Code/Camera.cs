@@ -3,6 +3,8 @@ using UnityEngine;
 public class Camera : MonoBehaviour {
     public static Camera Instance;
 
+    int camRes = 2;
+
     public Transform target;
 
     public Vector3 offset = new Vector3(0f, 0f, -1f);
@@ -78,6 +80,11 @@ public class Camera : MonoBehaviour {
         if (Player.dead) return;
 
         Vector3 targetPos = target.position + offset;
+
+        float pixelSize = 1f / camRes;
+
+        targetPos.x = Mathf.Round(targetPos.x / pixelSize) * pixelSize;
+        targetPos.y = Mathf.Round(targetPos.y / pixelSize) * pixelSize;
 
         transform.position = Vector3.SmoothDamp(
             transform.position,

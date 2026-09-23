@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
@@ -79,7 +80,7 @@ public class Player : MonoBehaviour {
             }
             return;
         }
-        transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        //transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         int wall = againstWall();
         bool floor = onFloor();
         if (Input.GetKey("a") && wall != -1) { body.linearVelocityX -= (floor ? floorAcceleration : airAcceleration) * Time.deltaTime; }
@@ -94,13 +95,18 @@ public class Player : MonoBehaviour {
             airTime = 0;
             hasJumped = false;
             body.linearVelocityX *= Mathf.Pow(floorDamping, Time.deltaTime);
+
+
         }
         else {
             body.linearVelocityX *= Mathf.Pow(airDamping, Time.deltaTime);
             airTime += Time.deltaTime;
         }
-
+        body.freezeRotation = !floor;
         body.linearVelocityX = Mathf.Clamp(body.linearVelocityX, -maxSpeed, maxSpeed);
+
+
+        //transform.rotation = Quaternion.Euler(0, 0, checkSlope());
 
     }
 
@@ -136,6 +142,15 @@ public class Player : MonoBehaviour {
         }
         return shit;
 
+    }
+
+    float checkSlope() {
+        return 0;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        Vector2 p1 = Physics2D.Raycast(new Vector2(box.bounds.min.x, box.bounds.min.y), Vector2.down, 1f, 1 << LayerMask.NameToLayer("Stage")).point;
+        Vector2 p2 = Physics2D.Raycast(new Vector2(box.bounds.max.x, box.bounds.min.y), Vector2.down, 1f, 1 << LayerMask.NameToLayer("Stage")).point;
+
+        return Mathf.Atan2(p2.y - p1.y, p2.x - p1.x) * Mathf.Rad2Deg;
     }
 
     public static void Kill() {
