@@ -41,14 +41,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Level
-    uniqueID: 1764949515
-    locked: 0
   - name: Death
     uniqueID: 206836961
     locked: 0
+  - name: Level
+    uniqueID: 1764949515
+    locked: 0
   - name: Particles
     uniqueID: 4048952841
+    locked: 0
+  - name: Player
+    uniqueID: 1306808453
     locked: 0
   m_RenderingLayers:
   - Default
