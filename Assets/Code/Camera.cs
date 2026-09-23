@@ -3,7 +3,7 @@ using UnityEngine;
 public class Camera : MonoBehaviour {
     public static Camera Instance;
 
-    int camRes = 2;
+    public float camRes = 2;
 
     public Transform target;
 
@@ -20,6 +20,9 @@ public class Camera : MonoBehaviour {
     UnityEngine.Camera cam;
     Vector3 velocity = Vector3.zero;
 
+    // Smooth camera position.
+    Vector3 position;
+
     float shakeIntensity;
 
     void Awake() {
@@ -31,8 +34,12 @@ public class Camera : MonoBehaviour {
         if (target != null) {
             Transform possibletarget;
             possibletarget = GameObject.Find("player").transform;
-            if (possibletarget != null) target = possibletarget;
-            transform.position = target.position + offset;
+
+            if (possibletarget != null)
+                target = possibletarget;
+
+            position = target.position + offset;
+            transform.position = position;
         }
 
         cam.orthographicSize = baseOrthographicSize * zoom;
@@ -81,17 +88,23 @@ public class Camera : MonoBehaviour {
 
         Vector3 targetPos = target.position + offset;
 
-        float pixelSize = 1f / camRes;
-
-        targetPos.x = Mathf.Round(targetPos.x / pixelSize) * pixelSize;
-        targetPos.y = Mathf.Round(targetPos.y / pixelSize) * pixelSize;
-
-        transform.position = Vector3.SmoothDamp(
-            transform.position,
+        // Smooth position stays fractional.
+        position = Vector3.SmoothDamp(
+            position,
             targetPos,
             ref velocity,
             smoothTime
         );
+
+        // Make a separate snapped position for rendering.
+        Vector3 renderPosition = position;
+
+        float pixelSize = 1f / camRes;
+
+        renderPosition.x = Mathf.Round(renderPosition.x / pixelSize) * pixelSize;
+        renderPosition.y = Mathf.Round(renderPosition.y / pixelSize) * pixelSize;
+
+        transform.position = renderPosition;
     }
 
     public void shake(float intensity) {
