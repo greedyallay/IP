@@ -47,6 +47,9 @@ TagManager:
   - name: Death
     uniqueID: 206836961
     locked: 0
+  - name: Particles
+    uniqueID: 4048952841
+    locked: 0
   m_RenderingLayers:
   - Default
   m_MigratedRenderPipelines: []
