@@ -156,6 +156,7 @@ public class Player : MonoBehaviour {
     public static void Kill() {
         print("you died");
         dead = true;
+        Main.deathCount += 1;
         audio.PlayOneShot(component.deathSound);
     }
 

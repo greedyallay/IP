@@ -4,6 +4,7 @@ public class Camera : MonoBehaviour {
     public static Camera Instance;
 
     public float camRes = 2;
+    public bool useCamRes = true;
 
     public Transform target;
 
@@ -99,10 +100,13 @@ public class Camera : MonoBehaviour {
         // Make a separate snapped position for rendering.
         Vector3 renderPosition = position;
 
-        float pixelSize = 1f / camRes;
+        if (useCamRes) {
+            float pixelSize = 1f / camRes;
 
-        renderPosition.x = Mathf.Round(renderPosition.x / pixelSize) * pixelSize;
-        renderPosition.y = Mathf.Round(renderPosition.y / pixelSize) * pixelSize;
+            renderPosition.x = Mathf.Round(renderPosition.x / pixelSize) * pixelSize;
+            renderPosition.y = Mathf.Round(renderPosition.y / pixelSize) * pixelSize;
+        }
+
 
         transform.position = renderPosition;
     }

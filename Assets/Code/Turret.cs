@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour {
     public Transform bullet;
+    public bool auto = true;
 
     Transform barrel;
     Transform gun;
@@ -24,16 +25,14 @@ public class Turret : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (!auto) return;
         if (timer == -1f) {
             Vector2 dir = gun.right;
             Debug.DrawRay(gun.transform.position, dir);
-            RaycastHit2D hit = Physics2D.Raycast(gun.transform.position, dir, 100, 1 << LayerMask.NameToLayer("Player"));
-            if (hit) {
-                Transform bulletObj = Instantiate(bullet);
-                bulletObj.transform.rotation = gun.transform.rotation;
-                bulletObj.transform.position = gun.transform.position;
-                timer = 0;
-                audio.Play();
+            RaycastHit2D hit = Physics2D.Raycast(gun.transform.position, dir, 100);
+            if (hit && hit.transform.name == "player") {
+                Fire();
+
             }
         }
         else {
@@ -46,7 +45,12 @@ public class Turret : MonoBehaviour {
 
     }
 
-    void Fire() {
+    public void Fire() {
+        Transform bulletObj = Instantiate(bullet);
+        bulletObj.transform.rotation = gun.transform.rotation;
+        bulletObj.transform.position = gun.transform.position;
+        timer = 0;
+        audio.Play();
 
     }
 
