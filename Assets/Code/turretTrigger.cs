@@ -3,13 +3,13 @@ using UnityEngine;
 public class turretTrigger : MonoBehaviour {
     public Transform target;
 
-    Turret turret;
+    MonoBehaviour code;
 
     void Start() {
-        turret = target.GetComponent<Turret>();
+        code = target.GetComponent<Turret>();
     }
 
     void OnTriggerEnter2D(Collider2D collision) {
-        turret.Fire();
+        code.Trigger();
     }
 }

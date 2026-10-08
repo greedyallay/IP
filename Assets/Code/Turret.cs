@@ -31,7 +31,7 @@ public class Turret : MonoBehaviour {
             Debug.DrawRay(gun.transform.position, dir);
             RaycastHit2D hit = Physics2D.Raycast(gun.transform.position, dir, 100);
             if (hit && hit.transform.name == "player") {
-                Fire();
+                Trigger();
 
             }
         }
@@ -45,7 +45,7 @@ public class Turret : MonoBehaviour {
 
     }
 
-    public void Fire() {
+    public void Trigger() {
         Transform bulletObj = Instantiate(bullet);
         bulletObj.transform.rotation = gun.transform.rotation;
         bulletObj.transform.position = gun.transform.position;
