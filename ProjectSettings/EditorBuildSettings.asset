@@ -17,5 +17,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/floorSpike.unity
     guid: 0e39dafcf8467b74c9a1c0de55c06fac
+  - enabled: 1
+    path: Assets/Scenes/hollowWalls.unity
+    guid: d8de0c3ba4afa6a4da1940efca22c041
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
